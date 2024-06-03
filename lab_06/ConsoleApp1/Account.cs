@@ -8,6 +8,8 @@ namespace ATMProject
         public string AccountNumber { get; private set; }
         public decimal Balance { get; private set; }
         public Card Card { get; private set; }
+        private const int HASH = 17;
+        private const int MultiplicativeCoefficient = 23;
 
         public Account(string accountNumber, decimal initialBalance, Card card)
         {
@@ -70,10 +72,10 @@ namespace ATMProject
         {
             unchecked
             {
-                int hash = 17;
-                hash = hash * 23 + (AccountNumber?.GetHashCode() ?? 0);
-                hash = hash * 23 + Balance.GetHashCode();
-                hash = hash * 23 + (Card?.GetHashCode() ?? 0);
+                int hash = HASH;
+                hash = hash * MultiplicativeCoefficient + (AccountNumber?.GetHashCode() ?? 0);
+                hash = hash * MultiplicativeCoefficient + Balance.GetHashCode();
+                hash = hash * MultiplicativeCoefficient + (Card?.GetHashCode() ?? 0);
                 return hash;
             }
         }

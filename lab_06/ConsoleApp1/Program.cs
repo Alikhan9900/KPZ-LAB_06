@@ -45,44 +45,39 @@ namespace ATMProject
                         case 1:
                             Console.WriteLine("Deposit Card №1:");
                             Account depositAccount = atm.GetAccount(card1);
-                            if (depositAccount != null)
-                            {
-                                Console.Write("Enter amount to deposit: ");
-                                decimal depositAmount = decimal.Parse(Console.ReadLine());
-                                ICommand deposit = new DepositCommand(atm, depositAccount.Card, depositAmount);
-                                deposit.Execute();
-                                Console.WriteLine("Deposit executed.");
-                            }
-                            else
+                            if (depositAccount == null)
                             {
                                 Console.WriteLine("Account not found.");
+                                break;
                             }
+                            Console.Write("Enter amount to deposit: ");
+                            decimal depositAmount = decimal.Parse(Console.ReadLine());
+                            ICommand deposit = new DepositCommand(atm, depositAccount.Card, depositAmount);
+                            deposit.Execute();
+                            Console.WriteLine("Deposit executed.");
                             break;
                         case 2:
                             Console.WriteLine("Withdraw from Card №2:");
                             Account withdrawAccount = atm.GetAccount(card2);
-                            if (withdrawAccount != null)
-                            {
-                                Console.Write("Enter amount to withdraw\n" +
-                                    "\t(The amount must be a multiple of 200): ");
-                                decimal withdrawAmount = decimal.Parse(Console.ReadLine());
-
-                                // The amount must be a multiple of 200
-                                if (withdrawAmount % 200 == 0)
-                                {
-                                    ICommand withdraw = new WithdrawCommand(atm, withdrawAccount.Card, withdrawAmount);
-                                    withdraw.Execute();
-                                    Console.WriteLine("Withdraw executed.");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("The amount must be a multiple of 200!");
-                                }
-                            }
-                            else
+                            if (withdrawAccount == null)
                             {
                                 Console.WriteLine("Account not found.");
+                                break;
                             }
+                            Console.Write("Enter amount to withdraw\n" +
+                                "\t(The amount must be a multiple of 200): ");
+                            decimal withdrawAmount = decimal.Parse(Console.ReadLine());
+
+                            // The amount must be a multiple of 200
+                            if (withdrawAmount % 200 != 0)
+                            {
+                                Console.WriteLine("The amount must be a multiple of 200!");
+                                break;
+                            }
+                            ICommand withdraw = new WithdrawCommand(atm, withdrawAccount.Card, withdrawAmount);
+                            withdraw.Execute();
+                            Console.WriteLine("Withdraw executed.");
+
                             break;
                         case 3:
                             Console.WriteLine("Check Card №1 Balance:");
@@ -95,42 +90,34 @@ namespace ATMProject
                             }
                             Console.WriteLine("Check Card №2 Balance:");
                             Account balanceCheckAccount2 = atm.GetAccount(card2);
-                            if (balanceCheckAccount2 != null)
+                            if (balanceCheckAccount2 == null)
                             {
-                                ICommand balanceCheck2 = new BalanceCheckCommand(atm, balanceCheckAccount2.Card);
-                                balanceCheck2.Execute();
-                                Console.WriteLine("Balance check executed.");
+                                Console.WriteLine("Account not found."); break;
                             }
-                            else
-                            {
-                                Console.WriteLine("Account not found.");
-                            }
+                            ICommand balanceCheck2 = new BalanceCheckCommand(atm, balanceCheckAccount2.Card);
+                            balanceCheck2.Execute();
+                            Console.WriteLine("Balance check executed.");
                             break;
                         case 4:
                             Console.WriteLine("Transfer from Card 1 to Card 2:");
                             Account transferFromAccount = atm.GetAccount(card1);
-                            if (transferFromAccount != null)
-                            {
-                                // Console.Write("Enter account number to transfer to: ");
-                                // string transferToAccountNumber = Console.ReadLine();
-                                Account transferToAccount = atm.GetAccount(card2);
-                                if (transferToAccount != null)
-                                {
-                                    Console.Write("Enter amount to transfer: ");
-                                    decimal transferAmount = decimal.Parse(Console.ReadLine());
-                                    ICommand transfer = new TransferCommand(atm, transferFromAccount.Card, transferToAccount.Card, transferAmount);
-                                    transfer.Execute();
-                                    Console.WriteLine("Transfer executed.");
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Destination account not found.");
-                                }
-                            }
-                            else
+                            if (transferFromAccount == null)
                             {
                                 Console.WriteLine("Source account not found.");
+                                break;
                             }
+
+                            Account transferToAccount = atm.GetAccount(card2);
+                            if (transferToAccount == null)
+                            {
+                                Console.WriteLine("Destination account not found.");
+                                break;
+                            }
+                            Console.Write("Enter amount to transfer: ");
+                            decimal transferAmount = decimal.Parse(Console.ReadLine());
+                            ICommand transfer = new TransferCommand(atm, transferFromAccount.Card, transferToAccount.Card, transferAmount);
+                            transfer.Execute();
+                            Console.WriteLine("Transfer executed.");
                             break;
                         case 5:
                             Console.WriteLine("Account Information:");
